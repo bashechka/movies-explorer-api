@@ -9,15 +9,25 @@ module.exports.createMovie = (req, res, next) => {
     image, trailerLink, thumbnail, movieId, nameRU, nameEN,
   } = req.body;
   Movie.create({
-    country, director, duration, year, description,
-    image, trailerLink, thumbnail, movieId, nameRU, nameEN, owner: req.user._id,
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
+    owner: req.user._id,
   })
     .then((movie) => res.status(201).send({ data: movie }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные'));
       } else {
-movienext(err);
+        next(err);
       }
     });
 };
