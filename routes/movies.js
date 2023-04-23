@@ -6,8 +6,8 @@ const {
   movieValidator, movieIdValidator,
 } = require('../validators/validators');
 
-router.get('/', getMovies);
-router.post('/', movieValidator, createMovie);
-router.delete('/:movieId', movieIdValidator, deleteMovie);
+router.get('/movies', getMovies);
+router.post('/movies', movieValidator, createMovie);
+router.delete('/movies/:movieId', movieIdValidator, deleteMovie);
 
 module.exports = router;

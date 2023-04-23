@@ -4,6 +4,7 @@ const User = require('../models/user');
 const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 const ConflictError = require('../errors/conflict-err');
+const config = require('../config/constants');
 
 module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
@@ -19,9 +20,9 @@ module.exports.createUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.code === 11000) {
-        next(new ConflictError('Пользователь с таким email уже существует'));
+        next(new ConflictError(config.USER_ALREADY_EXISTS_MSG));
       } else if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные'));
+        next(new BadRequestError(config.INVALID_DATA_MSG));
       } else {
         next(err);
       }
@@ -34,12 +35,10 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (user) {
         res.send({ data: user });
       } else {
-        next(new NotFoundError('Запрашиваемый пользователь не найден'));
+        next(new NotFoundError(config.USER_NOT_FOUND_MSG));
       }
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 module.exports.updateUser = (req, res, next) => {
@@ -49,12 +48,14 @@ module.exports.updateUser = (req, res, next) => {
       if (user) {
         res.send({ data: user });
       } else {
-        next(new NotFoundError('Запрашиваемый пользователь не найден'));
+        next(new NotFoundError(config.USER_NOT_FOUND_MSG));
       }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные'));
+        next(new BadRequestError(config.INVALID_DATA_MSG));
+      } else if (err.code === 11000) {
+        next(new ConflictError(config.USER_ALREADY_EXISTS_MSG));
       } else {
         next(err);
       }
@@ -73,7 +74,5 @@ module.exports.login = (req, res, next) => {
       // вернём токен
       res.send({ token });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
