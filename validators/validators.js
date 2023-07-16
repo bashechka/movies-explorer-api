@@ -1,6 +1,6 @@
 const { Joi, celebrate } = require('celebrate');
 
-const validURL = /^https?:\/\/[www.]?[a-zA-Z0-9]+[\w\-._~:/?#[\]$&'()*+,;*]{2,}#?$/;
+const validURL = /^https?:\/\/(www\.)?[a-zA-Z\0-9]+\.[\w\-._~:/?#[\]@!$&'()*+,;=]{2,}#?$/;
 
 module.exports.movieValidator = celebrate({
   body: Joi.object().keys({
